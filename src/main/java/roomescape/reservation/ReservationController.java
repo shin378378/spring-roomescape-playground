@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.dto.addReservationRequest;
+import roomescape.reservation.exception.MissingRequiredFieldException;
+import roomescape.reservation.exception.NotFoundReservationException;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,10 +19,9 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController() {
-        // 샘플 데이터 추가
-//        reservations.add(new Reservation(1L, "브라운", "2023-01-01", "10:00"));
-//        reservations.add(new Reservation(2L, "브라운", "2023-01-02", "11:00"));
-//        reservations.add(new Reservation(3L, "브라운", "2023-01-03", "12:00"));
+        reservations.add(new Reservation(1L, "브라운", "2023-01-01", "10:00"));
+        reservations.add(new Reservation(2L, "브라운", "2023-01-02", "11:00"));
+        reservations.add(new Reservation(3L, "브라운", "2023-01-03", "12:00"));
     }
 
     @GetMapping("/reservation")
@@ -40,9 +41,11 @@ public class ReservationController {
         String name = reservationRequest.getName();
         String data = reservationRequest.getDate();
         String time = reservationRequest.getTime();
-        if (name.isEmpty() || data.isEmpty() || time.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 인자가 누락되었습니다.");
+
+        if (name == null || name.isEmpty() || data == null || data.isEmpty() || time == null || time.isEmpty()) {
+            throw new MissingRequiredFieldException("필수 인자가 누락되었습니다.");
         }
+
         Reservation reservation = new Reservation(
                 getNextId(),
                 name, data, time
@@ -61,6 +64,10 @@ public class ReservationController {
         }
     }
 
+    @ExceptionHandler(NotFoundReservationException.class)
+    public ResponseEntity<String> handleException(NotFoundReservationException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable int id) {
@@ -73,8 +80,8 @@ public class ReservationController {
         throw new NotFoundReservationException("해당 ID의 예약이 존재하지 않습니다.");
     }
 
-    @ExceptionHandler(NotFoundReservationException.class)
-    public ResponseEntity<String> handleException(NotFoundReservationException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(MissingRequiredFieldException.class)
+    public ResponseEntity<String> handleMissingRequiredFieldException(MissingRequiredFieldException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }
