@@ -1,10 +1,15 @@
 package roomescape.reservation.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+import roomescape.reservation.Reservation;
 
 import java.util.List;
-import java.util.Map;
 
+@Repository
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -12,13 +17,42 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Map<String, Object>> findAll() {
+    public List<Reservation> findAll() {
         String sql = "SELECT id, name, date, time FROM reservation";
-        return jdbcTemplate.queryForList(sql);
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Map<String, Object> findById(Long id) {
+    public Reservation findById(Long id) {
         String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForMap(sql, id);
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
+
+    public Reservation insertReservation(String name, String date, String time) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            var ps = connection.prepareStatement(sql, new String[] { "id" });
+            ps.setString(1, name);
+            ps.setString(2, date);
+            ps.setString(3, time);
+            return ps;
+        }, keyHolder);
+
+        Long generatedId = keyHolder.getKey().longValue();
+        return findById(generatedId);
+    }
+
+
+    public void deleteReservation(Long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("date"),
+            rs.getString("time")
+    );
 }
