@@ -16,8 +16,7 @@ import java.util.List;
 
 @Controller
 public class ReservationController {
-
-    private final ReservationService reservationService;  // 올바르게 ReservationService로 수정
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -25,7 +24,7 @@ public class ReservationController {
 
     @GetMapping("/reservation")
     public String readPage(Model model) {
-        List<Reservation> reservations = reservationService.getAllReservations();  // 메서드 호출 수정
+        List<Reservation> reservations = reservationService.getAllReservations();
         model.addAttribute("reservation", reservations);
         return "reservation";
     }
