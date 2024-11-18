@@ -16,12 +16,15 @@ public class Reservation {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public String getDate() {
         return date;
     }
+
     public String getTime() {
         return time;
     }

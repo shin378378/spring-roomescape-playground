@@ -1,11 +1,12 @@
-package roomescape.reservation;
+package roomescape.reservation.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import roomescape.reservation.dto.addReservationRequest;
+import roomescape.reservation.Reservation;
+import roomescape.reservation.dto.AddReservationRequest;
 import roomescape.reservation.exception.MissingRequiredFieldException;
 import roomescape.reservation.exception.NotFoundReservationException;
 
@@ -19,9 +20,7 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController() {
-        reservations.add(new Reservation(1L, "브라운", "2023-01-01", "10:00"));
-        reservations.add(new Reservation(2L, "브라운", "2023-01-02", "11:00"));
-        reservations.add(new Reservation(3L, "브라운", "2023-01-03", "12:00"));
+
     }
 
     @GetMapping("/reservation")
@@ -37,7 +36,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> addReservation(@RequestBody addReservationRequest reservationRequest) {
+    public ResponseEntity<?> addReservation(@RequestBody AddReservationRequest reservationRequest) {
         String name = reservationRequest.getName();
         String data = reservationRequest.getDate();
         String time = reservationRequest.getTime();
