@@ -34,7 +34,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 getNextId(),
                 reservationRequest.getName(),
