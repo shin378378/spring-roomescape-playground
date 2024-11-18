@@ -1,8 +1,13 @@
 package roomescape.reservation.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class AddReservationRequest {
+    @NotEmpty(message = "이름은 필수 값입니다.")
     private String name;
+    @NotEmpty(message = "날짜은 필수 값입니다.")
     private String date;
+    @NotEmpty(message = "시간은 필수 값입니다.")
     private String time;
 
     public AddReservationRequest(String name, String date, String time) {

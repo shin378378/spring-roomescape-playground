@@ -1,5 +1,6 @@
 package roomescape.reservation.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,15 +14,12 @@ import roomescape.reservation.exception.NotFoundReservationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
-
+    private final AtomicLong atomicLong = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
-
-    public ReservationController() {
-
-    }
 
     @GetMapping("/reservation")
     public String readPage(Model model) {
@@ -29,38 +27,27 @@ public class ReservationController {
         return "reservation";
     }
 
-    @RequestMapping("/reservations")
+    @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> addReservation(@RequestBody AddReservationRequest reservationRequest) {
-        String name = reservationRequest.getName();
-        String data = reservationRequest.getDate();
-        String time = reservationRequest.getTime();
-
-        if (name == null || name.isEmpty() || data == null || data.isEmpty() || time == null || time.isEmpty()) {
-            throw new MissingRequiredFieldException("필수 인자가 누락되었습니다.");
-        }
-
+    public ResponseEntity<?> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 getNextId(),
-                name, data, time
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime()
         );
         reservations.add(reservation);
         URI location = URI.create("/reservations/" + reservation.getId());
-
         return ResponseEntity.created(location).body(reservation);
     }
 
-    private Long getNextId() {
-        if (reservations.isEmpty()) {
-            return 1L;
-        } else {
-            return reservations.get(reservations.size() - 1).getId() + 1;
-        }
+    private long getNextId() {
+        return atomicLong.getAndIncrement();
     }
 
     @ExceptionHandler(NotFoundReservationException.class)
