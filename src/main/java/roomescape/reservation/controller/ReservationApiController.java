@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dto.AddReservationRequest;
-import roomescape.reservation.exception.MissingRequiredFieldException;
 import roomescape.reservation.exception.NotFoundReservationException;
 
 import java.net.URI;
@@ -48,16 +47,6 @@ public class ReservationApiController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
         }
         throw new NotFoundReservationException("해당 ID의 예약이 존재하지 않습니다.");
-    }
-
-    @ExceptionHandler(NotFoundReservationException.class)
-    public ResponseEntity<String> handleNotFoundReservationException(NotFoundReservationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    @ExceptionHandler(MissingRequiredFieldException.class)
-    public ResponseEntity<String> handleMissingRequiredFieldException(MissingRequiredFieldException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     private long getNextId() {
