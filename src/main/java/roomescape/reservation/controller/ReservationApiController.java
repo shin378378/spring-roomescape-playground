@@ -41,17 +41,18 @@ public class ReservationApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable int id) {
         for (Reservation reservation : reservations) {
-            if (reservation.getId() == id) {
-                reservations.remove(reservation);
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
+            if (reservation.getId() != id) {
+                continue;
             }
+            reservations.remove(reservation);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
         }
         throw new NotFoundReservationException("해당 ID의 예약이 존재하지 않습니다.");
     }
 
     @ExceptionHandler(NotFoundReservationException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundReservationException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<String> handleNotFoundReservationException(NotFoundReservationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @ExceptionHandler(MissingRequiredFieldException.class)
