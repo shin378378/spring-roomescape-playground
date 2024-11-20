@@ -3,6 +3,7 @@ package roomescape.reservation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.exception.NotFoundReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 
 import java.util.List;
@@ -26,6 +27,11 @@ public class ReservationService {
 
     @Transactional
     public void cancelReservation(Long id) {
+        try {
+            reservationRepository.findById(id);
+        } catch (Exception e) {
+            throw new NotFoundReservationException("예약 ID가 존재하지 않습니다: " + id);
+        }
         reservationRepository.deleteReservation(id);
     }
 }

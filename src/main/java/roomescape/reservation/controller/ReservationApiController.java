@@ -8,6 +8,7 @@ import roomescape.reservation.Reservation;
 import roomescape.reservation.dto.AddReservationRequest;
 import roomescape.reservation.exception.MissingRequiredFieldException;
 import roomescape.reservation.ReservationService;
+import roomescape.reservation.exception.NotFoundReservationException;
 
 import java.net.URI;
 import java.util.List;
@@ -22,14 +23,13 @@ public class ReservationApiController {
     }
 
     @GetMapping
-    @ResponseBody
     public ResponseEntity<List<Reservation>> getReservations() {
         List<Reservation> reservations = reservationService.getAllReservations();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<?> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
         String name = reservationRequest.getName();
         String date = reservationRequest.getDate();
         String time = reservationRequest.getTime();
@@ -43,6 +43,6 @@ public class ReservationApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
+        return ResponseEntity.noContent().build();
     }
 }

@@ -10,7 +10,7 @@ import roomescape.reservation.Reservation;
 import java.util.List;
 
 @Repository
-public class ReservationRepository {
+public class ReservationRepository{
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -42,7 +42,6 @@ public class ReservationRepository {
         Long generatedId = keyHolder.getKey().longValue();
         return findById(generatedId);
     }
-
 
     public void deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
