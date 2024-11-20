@@ -16,4 +16,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNotFoundReservationException(NotFoundReservationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("에러발생: " + e.getMessage());
+    }
 }

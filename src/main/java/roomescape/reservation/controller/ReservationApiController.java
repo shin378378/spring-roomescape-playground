@@ -39,14 +39,12 @@ public class ReservationApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable int id) {
-        for (Reservation reservation : reservations) {
-            if (reservation.getId() != id) {
-                continue;
-            }
-            reservations.remove(reservation);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
-        }
-        throw new NotFoundReservationException("해당 ID의 예약이 존재하지 않습니다.");
+        Reservation reservation = reservations.stream()
+                .filter(reserv -> reserv.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundReservationException("해당 ID의 예약이 존재하지 않습니다."));
+        reservations.remove(reservation);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("예약이 취소되었습니다.");
     }
 
     private long getNextId() {
