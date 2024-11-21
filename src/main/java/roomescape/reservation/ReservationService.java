@@ -2,7 +2,6 @@ package roomescape.reservation;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.Reservation;
 import roomescape.reservation.exception.NotFoundReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 
