@@ -3,12 +3,15 @@ package roomescape.reservation.repository;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.Reservation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReservationRepository {
@@ -30,19 +33,20 @@ public class ReservationRepository {
     }
 
     public Reservation insertReservation(String name, String date, String time) {
-        String sql = "INSERT INTO reservation (`name`, `date`, `time`) VALUES (:name, :date, :time)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", name)
-                .addValue("date", date)
-                .addValue("time", time);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name);
+        parameters.put("date", date);
+        parameters.put("time", time);
 
-        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+        Number generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        Long generatedId = keyHolder.getKey().longValue();
-        return findById(generatedId);
+        return findById(generatedKey.longValue());
     }
+
 
     public void deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = :id";
