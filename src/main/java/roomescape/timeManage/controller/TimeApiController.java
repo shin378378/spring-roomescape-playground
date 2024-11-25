@@ -28,12 +28,8 @@ public class TimeApiController {
 
     @PostMapping
     public ResponseEntity<TimeSchedule> addTime(@RequestBody @Valid AddTimeRequest timeRequest) {
-        System.out.println("시간 받기");
-
         String time = timeRequest.getTime();
         TimeSchedule timeSchedule = timeService.addTime(time);
-
-        System.out.println("시간 추가하기");
         URI location = URI.create("/times/" + timeSchedule.getId());
         return ResponseEntity.created(location).body(timeSchedule);
     }
