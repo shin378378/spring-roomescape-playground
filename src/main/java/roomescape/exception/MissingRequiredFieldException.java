@@ -1,4 +1,4 @@
-package roomescape.reservation.exception;
+package roomescape.exception;
 
 public class MissingRequiredFieldException extends RuntimeException {
     public MissingRequiredFieldException(String message) {

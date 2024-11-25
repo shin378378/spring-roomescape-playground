@@ -1,9 +1,10 @@
-package roomescape.reservation;
+package roomescape.reservationManage.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.exception.NotFoundReservationException;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservationManage.Reservation;
+import roomescape.exception.NotFoundReservationException;
+import roomescape.reservationManage.repository.ReservationRepository;
 
 import java.util.List;
 
