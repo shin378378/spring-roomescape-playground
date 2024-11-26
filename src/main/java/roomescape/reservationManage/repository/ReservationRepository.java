@@ -56,6 +56,6 @@ public class ReservationRepository {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("date"),
-            rs.getString("time")
+            rs.getTime("time")
     );
 }
