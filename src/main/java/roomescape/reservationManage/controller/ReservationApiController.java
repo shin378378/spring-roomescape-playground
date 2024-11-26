@@ -8,6 +8,7 @@ import roomescape.reservationManage.dto.AddReservationRequest;
 import roomescape.reservationManage.service.ReservationService;
 
 import java.net.URI;
+import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class ReservationApiController {
     public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
         String name = reservationRequest.getName();
         String date = reservationRequest.getDate();
-        String time = reservationRequest.getTime();
+        Time time = reservationRequest.getTime();
 
         Reservation reservation = reservationService.addReservation(name, date, time);
         URI location = URI.create("/reservations/" + reservation.getId());

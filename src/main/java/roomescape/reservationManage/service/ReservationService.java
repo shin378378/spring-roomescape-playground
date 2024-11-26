@@ -6,6 +6,7 @@ import roomescape.reservationManage.Reservation;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.reservationManage.repository.ReservationRepository;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation addReservation(String name, String date, String time) {
+    public Reservation addReservation(String name, String date, Time time) {
         return reservationRepository.insertReservation(name, date, time);
     }
 

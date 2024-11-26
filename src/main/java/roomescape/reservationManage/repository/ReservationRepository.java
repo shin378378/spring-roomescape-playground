@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationManage.Reservation;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ReservationRepository {
         return namedParameterJdbcTemplate.queryForObject(sql, params, reservationRowMapper);
     }
 
-    public Reservation insertReservation(String name, String date, String time) {
+    public Reservation insertReservation(String name, String date, Time time) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
