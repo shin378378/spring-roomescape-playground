@@ -53,5 +53,4 @@ public class TimeRepository {
             rs.getLong("id"),
             rs.getString("time")
     );
-
 }
