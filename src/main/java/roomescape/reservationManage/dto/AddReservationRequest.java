@@ -11,7 +11,7 @@ public class AddReservationRequest {
     @NotBlank(message = "날짜은 필수 값입니다.")
     final private String date;
     @NotBlank(message = "시간은 필수 값입니다.")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     final private String time;
 
     public AddReservationRequest(String name, String date, String time) {

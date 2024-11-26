@@ -28,22 +28,14 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
-        String name = reservationRequest.getName();
-        String date = reservationRequest.getDate();
-        String timeValue = reservationRequest.getTime();
-
-        Time time;
-        try {
-            time = Time.valueOf(timeValue);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("시간 형식이 잘못되었습니다. HH:mm:ss 형식을 사용하세요.");
-        }
-
-        Reservation reservation = reservationService.addReservation(name, date, time);
+        Time time = Time.valueOf(reservationRequest.getTime());
+        Reservation reservation = reservationService.addReservation(
+                reservationRequest.getName(), reservationRequest.getDate(), time
+        );
         URI location = URI.create("/reservations/" + reservation.getId());
-
         return ResponseEntity.created(location).body(reservation);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
