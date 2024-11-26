@@ -30,7 +30,14 @@ public class ReservationApiController {
     public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
         String name = reservationRequest.getName();
         String date = reservationRequest.getDate();
-        Time time = reservationRequest.getTime();
+        String timeValue = reservationRequest.getTime();
+
+        Time time;
+        try {
+            time = Time.valueOf(timeValue);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("시간 형식이 잘못되었습니다. HH:mm:ss 형식을 사용하세요.");
+        }
 
         Reservation reservation = reservationService.addReservation(name, date, time);
         URI location = URI.create("/reservations/" + reservation.getId());
