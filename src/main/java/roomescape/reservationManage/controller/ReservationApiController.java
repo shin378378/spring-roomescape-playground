@@ -8,7 +8,6 @@ import roomescape.reservationManage.dto.AddReservationRequest;
 import roomescape.reservationManage.service.ReservationService;
 
 import java.net.URI;
-import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -28,14 +27,18 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
-        Time time = Time.valueOf(reservationRequest.getTime());
-        Reservation reservation = reservationService.addReservation(
-                reservationRequest.getName(), reservationRequest.getDate(), time
-        );
-        URI location = URI.create("/reservations/" + reservation.getId());
-        return ResponseEntity.created(location).body(reservation);
+        try {
+            Reservation reservation = reservationService.addReservation(
+                    reservationRequest.getName(),
+                    reservationRequest.getDate(),
+                    reservationRequest.getTimeId()
+            );
+            URI location = URI.create("/reservations/" + reservation.getId());
+            return ResponseEntity.created(location).body(reservation);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("timeId는 유효한 숫자여야 합니다.");
+        }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {

@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationManage.Reservation;
-import roomescape.timeManage.TimeSchedule;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +20,14 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.time AS time_value " +
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id " +
                 "FROM reservation AS r " +
                 "INNER JOIN time AS t ON r.time_id = t.id";
         return namedParameterJdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation findById(Long id) {
-        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.time AS time_value " +
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id " +
                 "FROM reservation AS r " +
                 "INNER JOIN time AS t ON r.time_id = t.id " +
                 "WHERE r.id = :id";
@@ -37,7 +35,7 @@ public class ReservationRepository {
         return namedParameterJdbcTemplate.queryForObject(sql, params, reservationRowMapper);
     }
 
-    public Reservation insertReservation(String name, String date, Time time) {
+    public Reservation insertReservation(String name, String date, Long timeId) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -45,13 +43,12 @@ public class ReservationRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", name);
         parameters.put("date", date);
-        parameters.put("time", time);
+        parameters.put("time_id", timeId);
 
         Number generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters);
 
         return findById(generatedKey.longValue());
     }
-
 
     public void deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = :id";
@@ -63,6 +60,6 @@ public class ReservationRepository {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("date"),
-            rs.getTime("time")
+            rs.getLong("time_id")
     );
 }

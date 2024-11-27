@@ -6,7 +6,6 @@ import roomescape.reservationManage.Reservation;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.reservationManage.repository.ReservationRepository;
 
-import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -22,17 +21,17 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation addReservation(String name, String date, Time time) {
-        return reservationRepository.insertReservation(name, date, time);
+    public Reservation addReservation(String name, String date, Long timeId) {
+        return reservationRepository.insertReservation(name, date, timeId);
     }
 
     @Transactional
     public void cancelReservation(Long id) {
-        try {
-            reservationRepository.findById(id);
-        } catch (Exception e) {
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation == null) {
             throw new NotFoundReservationException("예약 ID가 존재하지 않습니다: " + id);
         }
         reservationRepository.deleteReservation(id);
     }
 }
+

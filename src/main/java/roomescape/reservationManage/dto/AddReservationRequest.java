@@ -1,23 +1,20 @@
 package roomescape.reservationManage.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
-
-import java.sql.Time;
+import jakarta.validation.constraints.NotNull;
 
 public class AddReservationRequest {
     @NotBlank(message = "이름은 필수 값입니다.")
     final private String name;
-    @NotBlank(message = "날짜은 필수 값입니다.")
+    @NotBlank(message = "날짜는 필수 값입니다.")
     final private String date;
-    @NotBlank(message = "시간은 필수 값입니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    final private String time;
+    @NotNull(message = "timeId는 필수 값입니다.")
+    final private Long timeId;
 
-    public AddReservationRequest(String name, String date, String time) {
+    public AddReservationRequest(String name, String date, Long timeId) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public String getName() {
@@ -28,7 +25,7 @@ public class AddReservationRequest {
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }
