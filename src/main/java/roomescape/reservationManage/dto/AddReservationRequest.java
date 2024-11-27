@@ -9,12 +9,12 @@ public class AddReservationRequest {
     @NotBlank(message = "날짜는 필수 값입니다.")
     final private String date;
     @NotNull(message = "timeId는 필수 값입니다.")
-    final private Long timeId;
+    final private Long time;
 
-    public AddReservationRequest(String name, String date, Long timeId) {
+    public AddReservationRequest(String name, String date, Long time) {
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.time = time;
     }
 
     public String getName() {
@@ -25,7 +25,7 @@ public class AddReservationRequest {
         return date;
     }
 
-    public Long getTimeId() {
-        return timeId;
+    public Long getTime() {
+        return time;
     }
 }
