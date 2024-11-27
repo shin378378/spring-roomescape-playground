@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationManage.Reservation;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,15 +36,14 @@ public class ReservationRepository {
         return namedParameterJdbcTemplate.queryForObject(sql, params, reservationRowMapper);
     }
 
-    public Reservation insertReservation(String name, String date, Long timeId) {
+    public Reservation insertReservation(String name, String date, Long time) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", name);
         parameters.put("date", date);
-        parameters.put("time_id", timeId);
+        parameters.put("time_id", time);
 
         Number generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters);
 
@@ -56,10 +56,20 @@ public class ReservationRepository {
         namedParameterJdbcTemplate.update(sql, params);
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getString("date"),
-            rs.getLong("time_id")
-    );
+    public Time findTimeById(Long timeId) {
+        String sql = "SELECT time FROM time WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", timeId);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Time.class);
+    }
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        Long timeId = rs.getLong("time_id");
+        Time time = findTimeById(timeId);
+        return new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                time
+        );
+    };
 }
