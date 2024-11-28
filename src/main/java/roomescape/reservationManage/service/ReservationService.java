@@ -34,9 +34,5 @@ public class ReservationService {
         }
         reservationRepository.deleteReservation(id);
     }
-
-    public Time findTimeById(Long timeId) {
-        return reservationRepository.findTimeById(timeId);
-    }
 }
 

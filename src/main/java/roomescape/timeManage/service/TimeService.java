@@ -3,7 +3,7 @@ package roomescape.timeManage.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.NotFoundReservationException;
-import roomescape.timeManage.TimeSchedule;
+import roomescape.timeManage.Time;
 import roomescape.timeManage.repository.TimeRepository;
 
 import java.util.List;
@@ -16,12 +16,12 @@ public class TimeService {
         this.timeRepository = timeRepository;
     }
 
-    public List<TimeSchedule> getAllTimes() {
+    public List<Time> getAllTimes() {
         return timeRepository.findAll();
     }
 
     @Transactional
-    public TimeSchedule addTime(String time) {
+    public Time addTime(String time) {
         return timeRepository.insertTime(time);
     }
 

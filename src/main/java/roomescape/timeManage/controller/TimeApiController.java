@@ -3,7 +3,7 @@ package roomescape.timeManage.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.timeManage.TimeSchedule;
+import roomescape.timeManage.Time;
 import roomescape.timeManage.dto.AddTimeRequest;
 import roomescape.timeManage.service.TimeService;
 
@@ -20,15 +20,15 @@ public class TimeApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeSchedule>> getTimes() {
-        List<TimeSchedule> times = timeService.getAllTimes();
+    public ResponseEntity<List<Time>> getTimes() {
+        List<Time> times = timeService.getAllTimes();
         return ResponseEntity.ok().body(times);
     }
 
     @PostMapping
-    public ResponseEntity<TimeSchedule> addTime(@RequestBody @Valid AddTimeRequest timeRequest) {
+    public ResponseEntity<Time> addTime(@RequestBody @Valid AddTimeRequest timeRequest) {
         String time = timeRequest.getTime();
-        TimeSchedule timeSchedule = timeService.addTime(time);
+        Time timeSchedule = timeService.addTime(time);
         URI location = URI.create("/times/" + timeSchedule.getId());
         return ResponseEntity.created(location).body(timeSchedule);
     }
