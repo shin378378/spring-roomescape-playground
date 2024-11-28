@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationManage.Reservation;
+import roomescape.timeManage.Time;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,11 +67,19 @@ public class ReservationRepository {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        // time 객체 생성
+        Time time = new Time(
+                rs.getLong("time_id"),      // time의 id
+                rs.getString("time_value")  // time의 value
+        );
+
+        // Reservation 객체 반환
         return new Reservation(
-                rs.getLong("reservation_id"),  // alias 사용
+                rs.getLong("reservation_id"), // alias 사용
                 rs.getString("name"),
                 rs.getString("date"),
-                rs.getTime("time_value")       // time_value 직접 매핑
+                time                           // 생성된 time 객체 전달
         );
     };
+
 }

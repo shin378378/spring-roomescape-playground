@@ -1,6 +1,7 @@
 package roomescape.reservationManage;
 
-import java.sql.Time;
+
+import roomescape.timeManage.Time;
 
 public class Reservation {
     private Long id;
