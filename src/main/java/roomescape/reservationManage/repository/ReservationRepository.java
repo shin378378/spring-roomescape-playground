@@ -67,18 +67,16 @@ public class ReservationRepository {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
-        // time 객체 생성
         Time time = new Time(
-                rs.getLong("time_id"),      // time의 id
-                rs.getString("time_value")  // time의 value
+                rs.getLong("time_id"),
+                rs.getString("time_value")
         );
 
-        // Reservation 객체 반환
         return new Reservation(
-                rs.getLong("reservation_id"), // alias 사용
+                rs.getLong("reservation_id"),
                 rs.getString("name"),
                 rs.getString("date"),
-                time                           // 생성된 time 객체 전달
+                time
         );
     };
 

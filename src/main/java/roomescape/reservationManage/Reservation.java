@@ -7,7 +7,7 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private Time time; // time_id만 저장
+    private Time time;
 
     public Reservation(Long id, String name, String date, Time time) {
         this.id = id;
