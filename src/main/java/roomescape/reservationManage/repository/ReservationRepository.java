@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservationManage.Reservation;
 import roomescape.timeManage.Time;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,32 +19,6 @@ public class ReservationRepository {
 
     public ReservationRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
-
-    public List<Reservation> findAll() {
-        String sql = "SELECT " +
-                "    r.id AS reservation_id, " +
-                "    r.name, " +
-                "    r.date, " +
-                "    t.id AS time_id, " +
-                "    t.time AS time_value " +
-                "FROM reservation AS r " +
-                "INNER JOIN time AS t ON r.time_id = t.id";
-        return namedParameterJdbcTemplate.query(sql, reservationRowMapper);
-    }
-
-    public Reservation findById(Long id) {
-        String sql = "SELECT " +
-                "    r.id AS reservation_id, " +
-                "    r.name, " +
-                "    r.date, " +
-                "    t.id AS time_id, " +
-                "    t.time AS time_value " +
-                "FROM reservation AS r " +
-                "INNER JOIN time AS t ON r.time_id = t.id " +
-                "WHERE r.id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.queryForObject(sql, params, reservationRowMapper);
     }
 
     public Reservation insertReservation(String name, String date, Long time) {
@@ -58,6 +33,20 @@ public class ReservationRepository {
         Number generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters);
 
         return findById(generatedKey.longValue());
+    }
+
+    public Reservation findById(Long id) {
+        String sql = "SELECT " +
+                "    r.id AS reservation_id, " +
+                "    r.name, " +
+                "    r.date, " +
+                "    t.id AS time_id, " +
+                "    t.time AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN time AS t ON r.time_id = t.id " +
+                "WHERE r.id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, reservationRowMapper);
     }
 
     public void deleteReservation(Long id) {
@@ -80,4 +69,15 @@ public class ReservationRepository {
         );
     };
 
+    public List<Reservation> findAll() {
+        String sql = "SELECT " +
+                "    r.id AS reservation_id, " +
+                "    r.name, " +
+                "    r.date, " +
+                "    t.id AS time_id, " +
+                "    t.time AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN time AS t ON r.time_id = t.id";
+        return namedParameterJdbcTemplate.query(sql, reservationRowMapper);
+    }
 }

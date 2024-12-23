@@ -1,6 +1,7 @@
 package roomescape.reservationManage.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservationManage.Reservation;
@@ -27,19 +28,13 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody @Valid AddReservationRequest reservationRequest) {
-        if (reservationRequest.getTime() == null) {
-            throw new IllegalArgumentException("time은 숫자여야 합니다.");
-        }
-
         Reservation reservation = reservationService.addReservation(
                 reservationRequest.getName(),
                 reservationRequest.getDate(),
                 reservationRequest.getTime()
         );
-        URI location = URI.create("/reservations/" + reservation.getId());
-        return ResponseEntity.created(location).body(reservation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
