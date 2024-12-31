@@ -1,11 +1,9 @@
-package roomescape.timeManage.controller;
+package roomescape.timeManage;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.timeManage.Time;
 import roomescape.timeManage.dto.AddTimeRequest;
-import roomescape.timeManage.service.TimeService;
 
 import java.net.URI;
 import java.util.List;

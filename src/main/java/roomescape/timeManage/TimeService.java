@@ -1,10 +1,10 @@
-package roomescape.timeManage.service;
+package roomescape.timeManage;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.timeManage.Time;
-import roomescape.timeManage.repository.TimeRepository;
+import roomescape.timeManage.TimeRepository;
 
 import java.util.List;
 

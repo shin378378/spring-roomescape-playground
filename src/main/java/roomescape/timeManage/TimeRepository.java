@@ -1,4 +1,4 @@
-package roomescape.timeManage.repository;
+package roomescape.timeManage;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
