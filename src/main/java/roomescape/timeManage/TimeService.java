@@ -3,8 +3,7 @@ package roomescape.timeManage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.NotFoundReservationException;
-import roomescape.timeManage.Time;
-import roomescape.timeManage.TimeRepository;
+import roomescape.timeManage.repository.TimeRepository;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class TimeService {
 
     @Transactional
     public Time addTime(String time) {
-        return timeRepository.insertTime(time);
+        return timeRepository.save(time);
     }
 
     @Transactional
@@ -32,6 +31,6 @@ public class TimeService {
         } catch (Exception e) {
             throw new NotFoundReservationException("시간 ID가 존재하지 않습니다: " + id);
         }
-        timeRepository.deleteTime(id);
+        timeRepository.delete(id);
     }
 }

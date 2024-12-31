@@ -1,56 +1,32 @@
-package roomescape.timeManage;
+package roomescape.timeManage.repository;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.timeManage.Time;
+import roomescape.timeManage.TimeDao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class TimeRepository {
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final TimeDao timeDao;
 
-    public TimeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    public TimeRepository(TimeDao timeDao) {
+        this.timeDao = timeDao;
     }
 
     public List<Time> findAll() {
-        String sql = "SELECT id, time FROM time";
-        return namedParameterJdbcTemplate.query(sql, timeRowMapper);
+        return timeDao.findAll();
     }
 
     public Time findById(Long id) {
-        String sql = "SELECT id, time FROM time WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.queryForObject(sql, params, timeRowMapper);
+        return timeDao.findById(id);
     }
 
-    public Time insertTime(String time) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
-                .withTableName("time")
-                .usingGeneratedKeyColumns("id");
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("time", time);
-        Number generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters);
-
-        return findById(generatedKey.longValue());
+    public Time save(String time) {
+        return timeDao.insert(time);
     }
 
-
-    public void deleteTime(Long id) {
-        String sql = "DELETE FROM time WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        namedParameterJdbcTemplate.update(sql, params);
+    public void delete(Long id) {
+        timeDao.deleteById(id);
     }
-
-    private final RowMapper<Time> timeRowMapper = (rs, rowNum) -> new Time(
-            rs.getLong("id"),
-            rs.getString("time")
-    );
 }
