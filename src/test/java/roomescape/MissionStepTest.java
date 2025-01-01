@@ -2,7 +2,10 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,9 +26,11 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MissionStepTest {
 
     @Test
+    @Order(1)
     void 일단계() {
         RestAssured.given().log().all()
                 .when().get("/")
@@ -34,6 +39,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(2)
     void 이단계() {
         RestAssured.given().log().all()
                 .when().get("/reservation")
@@ -48,6 +54,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(3)
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -82,6 +89,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(4)
     void 사단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -107,6 +115,7 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    @Order(5)
     void 오단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -118,6 +127,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(6)
     void 육단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
@@ -133,6 +143,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(7)
     void 칠단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -160,6 +171,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(8)
     void 팔단계() {
         Map<String, String> params = new HashMap<>();
         params.put("time", "10:00");
@@ -185,6 +197,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Order(9)
     void 구단계() {
         Map<String, String> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -203,6 +216,7 @@ public class MissionStepTest {
     private ReservationApiController reservationController;
 
     @Test
+    @Order(10)
     void 십단계() {
         boolean isJdbcTemplateInjected = false;
 
